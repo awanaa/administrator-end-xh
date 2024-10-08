@@ -1,0 +1,151 @@
+ <template>
+  <div class="timetable w100 h100">
+    <div class="timetable-b w100">
+      <table class="timetable-content w100">
+        <!-- {{ "第"+selectedWeek+"周" }} -->
+        <thead>
+          <tr>
+            <th class="yuefen"><div><p>7月</p></div></th>
+            <th v-for="(item1, index1) in times" :key="index1">
+             
+           <div class="th-tilte">  
+            <p> {{ "周"+ item1 }}</p>
+            <p class="title-day">8/20</p>
+           </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item2, index2) in maxCourseLength" :key="index2">
+            <th>
+              <p class="jieshu" style=" font-size: 15px; font-weight: bold;">{{  numberToChinease(item2) }}</p>
+              <p class="shijianduan" style=" font-size: 10px; color:#007AFF; margin-top: 5px; font-weight: bold;">{{ time[index2] }}</p>
+            </th>
+            <template v-for="(item3, index3) in weeks"  :key="index3">
+
+            
+              <td
+              v-if="shouldShowCell(index3, index2)"
+      :rowspan="getCourseSpan(index3, index2)"
+      :style="[
+        {
+          display: '',
+        },
+      ]"
+              >
+                <div
+                  class="dmsjandjs-b"
+                  :style="[
+                    {
+                      background: showData(index3, index2).index
+                        ? getRandomColor()
+                        : '#e5edfa',
+                    },
+                 
+                    { color: '#fff' },
+                    { borderRadius: '5px' },
+                   
+                    { height: '100%' },
+                  ]"
+                >
+                  <!-- <p>
+                    {{ showData(index3, index2).startTime }}
+                    {{ showData(index3, index2).startTime ? "-" : "" }}
+                    {{ showData(index3, index2).endTime }}
+                  </p> -->
+              <div class="wenzi">
+                <p>{{ showData(index3, index2).courseName }}</p>
+                  <!-- <p>{{ showData(index3, index2).major }}</p>
+                  <p>{{ showData(index3, index2).class }}</p> -->
+                  <p>{{ showData(index3, index2).didian}}</p>
+              </div>
+                </div>
+              </td>
+            </template>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+ 
+ methods: {
+
+    //处理数据
+    chulidata(courseList){
+     weekCourse.value = courseList.courseList
+     let dangqianzhou = courseList.weekDate
+     console.log("weekCourse",weekCourse.value)
+      console.log("dangqianzhou",dangqianzhou)
+    },
+    getCourseSpan(day, timeIndex) {
+  // 在weekCourse数组中查找指定天和时间的课程
+  let currentCourse = this.weekCourse.find(course => course.weekday === day && course.time === timeIndex);
+  // 如果没有找到课程或者课程没有名称，返回跨度为1
+  if (!currentCourse || !currentCourse.courseName) return 1;
+  
+  // 初始化跨度为1
+  let span = 1;
+  // 循环检查后续课程是否与当前课程相同
+  while (timeIndex + span <= this.maxCourseLength) {
+    // 查找下一个时间段的课程
+    let nextCourse = this.weekCourse.find(course => course.weekday === day && course.time === timeIndex + span);
+    // 如果找到下一个课程且与当前课程名称相同，增加跨度
+    if (nextCourse && currentCourse.courseName === nextCourse.courseName) {
+      span++;
+    } else {
+      // 如果下一个课程不同或不存在，跳出循环
+      break;
+    }
+  }
+  // 返回课程的跨度
+  return span;
+},
+
+// 判断是否应该显示单元格
+shouldShowCell(day, timeIndex) {
+  if (timeIndex === 0) return true;
+  let prevCourse = this.weekCourse.find(course => course.weekday === day && course.time === timeIndex - 1);
+  let currentCourse = this.weekCourse.find(course => course.weekday === day && course.time === timeIndex);
+  return !prevCourse || !currentCourse || prevCourse.courseName !== currentCourse.courseName;
+},
+
+// 改变选择器次数
+changeCount(i) {
+  // 更新计数器
+  this.count += i;
+  // 返回更新后的计数器值
+  return this.count;
+},
+
+// 排序周期和课数
+sortData() {
+  // 根据weekday属性对weekCourse数组进行排序
+  this.weekCourse.sort((a, b) => a.weekday - b.weekday);
+},
+
+// 初始化课数(courses)与天数(week)
+init() {
+  // 初始化周数数组
+  this.weeks = [];
+  // 初始化最大课节数
+  this.maxCourseLength = 0;
+  // 遍历weekCourse数组，找出最大的weekday值，以确定最大课节数
+  this.weekCourse.forEach(item => {
+    if (item.weekday > this.maxCourseLength) {
+      this.maxCourseLength = item.weekday;
+    }
+  });
+  // 创建一个数组，长度为最大课节数
+  this.weeks = Array.from({ length: this.maxCourseLength }, (_, i) => i);
+},
+
+// 处理数据，返回对应字符
+showData(weekIndex, courseNum) {
+  let course = this.weekCourse.find(course => course.weekday === weekIndex && course.time === courseNum);
+  if (course && course.time === courseNum + 1) {
+    return course;
+  }
+  // 如果没有找到，返回false
+  return false;
+},
