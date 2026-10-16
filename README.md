@@ -6,8 +6,8 @@
 ## About
 
 `administrator-end-xh` is the **admin client** of the same smart campus / sports
-management platform as [`xh`](https://github.com/awanaa/xh) (student client), built for
-**【competition name TBD / 比赛名称待填】**.
+management platform as [`xh`](https://github.com/awanaa/xh) (student client),
+built for a campus innovation competition (大赛参赛作品).
 
 It gives school staff full management over students, teachers, courses, attendance,
 homework and physical-education (体育) records — with charts, search, forms and
