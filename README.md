@@ -1,12 +1,13 @@
-# administrator-end-xh — Smart Campus Platform (Admin Client)
+# administrator-end-xh — 星火教育平台 Xinghuo Education Platform (Admin Client)
 
 > **Competition project** — Vue 3 + Vite + Element Plus · Admin dashboard
 > 管理者向けキャンパスプラットフォーム（管理端）
 
 ## About
 
-`administrator-end-xh` is the **admin client** of the same smart campus / sports
-management platform as [`xh`](https://github.com/awanaa/xh) (student client),
+`administrator-end-xh` is the **admin client** of the same
+**星火教育平台 (Xinghuo Education Platform)** as
+[`xh`](https://github.com/awanaa/xh) (student client),
 built for a campus innovation competition (大赛参赛作品).
 
 It gives school staff full management over students, teachers, courses, attendance,
